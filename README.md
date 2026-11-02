@@ -1,65 +1,63 @@
-# 🔐 Cybersecurity Lab Environment Setup
+# 🔐 Web Security Review
 
-**Building an isolated virtual lab for penetration testing and ethical hacking practice using VMware and Kali Linux**
+**A defensive security review of an intentionally vulnerable training application, performed in an isolated local lab**
 
-![Skill](https://img.shields.io/badge/Skill-Cybersecurity-404040?style=flat-square&labelColor=C00000) ![Hypervisor](https://img.shields.io/badge/Hypervisor-VMware%20Workstation%2017-0070C0?style=flat-square&labelColor=000000) ![Kali Linux](https://img.shields.io/badge/Guest%20OS-Kali%20Linux-E87500?style=flat-square&labelColor=000000&logo=kalilinux&logoColor=white) ![Skill](https://img.shields.io/badge/Skill-Linux-404040?style=flat-square&labelColor=C00000) ![Network](https://img.shields.io/badge/Network-10.0.0.0%2F24-238F89?style=flat-square&labelColor=000000) ![Penetration Testing](https://img.shields.io/badge/Penetration%20Testing-C00000?style=flat-square&labelColor=000000&logo=kalilinux&logoColor=white) ![Skill](https://img.shields.io/badge/Skill-Virtualization-404040?style=flat-square&labelColor=C00000) ![GitHub](https://img.shields.io/badge/GitHub-404040?style=flat-square&labelColor=0070C0&logo=github&logoColor=white) ![NetworkWalks](https://img.shields.io/badge/NetworkWalks-404040?style=flat-square&labelColor=C00000) ![Ethical Hacking](https://img.shields.io/badge/Ethical%20Hacking-E87500?style=flat-square&labelColor=000000) ![Author](https://img.shields.io/badge/Mubassir-C00000?style=flat-square)
+![Skill](https://img.shields.io/badge/Skill-Cybersecurity-404040?style=flat-square&labelColor=C00000) ![Target](https://img.shields.io/badge/Target-OWASP%20Juice%20Shop-E87500?style=flat-square&labelColor=000000) ![Tool](https://img.shields.io/badge/Tool-Burp%20Suite-0070C0?style=flat-square&labelColor=000000) ![Skill](https://img.shields.io/badge/Skill-Linux-404040?style=flat-square&labelColor=C00000) ![Port](https://img.shields.io/badge/Target%20Port-3000-238F89?style=flat-square&labelColor=000000) ![Web App Security](https://img.shields.io/badge/Web%20App%20Security-C00000?style=flat-square&labelColor=000000) ![Skill](https://img.shields.io/badge/Skill-OWASP%20Top%2010-404040?style=flat-square&labelColor=C00000) ![GitHub](https://img.shields.io/badge/GitHub-404040?style=flat-square&labelColor=0070C0&logo=github&logoColor=white) ![SWYNEX](https://img.shields.io/badge/SWYNEX%20Technologies-404040?style=flat-square&labelColor=C00000) ![Ethical Hacking](https://img.shields.io/badge/Ethical%20Hacking-E87500?style=flat-square&labelColor=000000) ![Author](https://img.shields.io/badge/Author-%5BYour%20Name%5D-C00000?style=flat-square)
 
 ---
 
 ## 📌 Project Overview
 
-This is my **Week 1 – Project Module 1 (WK1-PM1)** submission for the Networkwalks Cybersecurity Internship, Batch **B084**.
+This is my **Task 3 — Web Security Review** submission for the **SWYNEX Technologies** internship.
 
-The project builds a **safe, isolated cybersecurity lab** on my own computer. A Kali Linux virtual machine runs on a private virtual network, so I can practise security tools without touching any real system.
+The project performs a **defensive security review** of a web application running entirely inside my own Kali Linux environment. I used **OWASP Juice Shop**, an intentionally vulnerable training application, as the authorized target, and documented every finding with evidence, severity, and remediation guidance.
 
-> **Note:** VirtualBox is the recommended hypervisor for this project, but it is not supported on my machine. I used **VMware Workstation** instead, which the project guide allows as an alternative. All project requirements are met; only the network configuration steps differ.
+> **Scope Note:** All testing was performed exclusively against a local, authorized training application (`localhost:3000`). No third-party or production systems were accessed, scanned, or targeted at any point.
 
 ---
 
 ## 🎯 Objectives
 
-- Install VMware Workstation as the virtualization platform.
-- Import the latest Kali Linux as a virtual machine.
-- Create a private NAT network using the `10.0.0.0/24` subnet.
-- Assign the fixed IP address `10.0.0.2/24` to Kali Linux.
-- Confirm that Kali Linux has full internet access.
-- Enable clipboard sharing and drag-and-drop between host and VM.
-- Share the host Downloads folder with the VM.
-- Take a clean snapshot for recovery.
-- Document the full process with screenshots.
+- Deploy OWASP Juice Shop locally as an authorized, isolated test target.
+- Perform reconnaissance using `nmap`, `nikto`, and `curl`.
+- Set up Burp Suite as an intercepting proxy to capture and inspect live traffic.
+- Identify and manually validate common web vulnerabilities (OWASP Top 10).
+- Triage automated scan output and discard false positives.
+- Document each finding with location, evidence, severity, and remediation.
+- Produce a structured, reviewable security report.
 
 ---
 
-## 🛡️ Purpose of the Lab
+## 🛡️ Purpose of the Review
 
-The lab gives me a controlled place to learn and practise, for example:
+This review gave me hands-on practice with the full defensive assessment workflow, including:
 
-- Network scanning and reconnaissance
-- Vulnerability assessment
-- Traffic and packet analysis
-- Web application testing
-- Learning how security tools behave
+- Reconnaissance and service fingerprinting
+- Proxy-based traffic interception and request manipulation
+- Manual exploitation of common injection and access-control flaws
+- Distinguishing real findings from scanner noise/false positives
+- Mapping findings to the OWASP Top 10 and writing remediation guidance
 
-⚠️ **Important:** Use this lab only on systems I own or have written permission to test. Never use these tools against real, unauthorized targets.
+⚠️ **Important:** This lab was tested only on an application I deployed myself for training purposes. Never use these techniques against real, unauthorized systems.
 
 ---
 
 ## 🏗️ Lab Architecture
 
 ```
-            Internet
-               |
-   Host PC (Windows 11) - VMware NAT service
-               |
-     VMnet8 (NAT)  10.0.0.0/24
-     Gateway: 10.0.0.254
-               |
-     Kali Linux VM  10.0.0.2/24
+            Kali Linux (Host)
+                   |
+         Docker Engine (local)
+                   |
+   OWASP Juice Shop Container
+        127.0.0.1:3000  (NAT'd, not exposed externally)
+                   |
+      Burp Suite Community (proxy, 127.0.0.1:8080)
+                   |
+         Firefox (manual testing)
 ```
 
-![Kali Linux running in VMware](screenshots/01-kali-desktop.png)
-
-More virtual machines can be added to the same network in future projects.
+The target container was never exposed beyond `localhost`, keeping the entire review self-contained on one machine.
 
 ---
 
@@ -67,167 +65,231 @@ More virtual machines can be added to the same network in future projects.
 
 | 🧩 Component | ⚙️ Configuration |
 |---|---|
-| 🖥️ Host OS | Windows 11 Home |
-| 🧰 Hypervisor | VMware Workstation 17 Pro (17.0.2) |
-| 🐉 Guest OS | Kali Linux 2025.1 |
-| 🌐 Virtual Network | VMnet8 (NAT) |
-| 📡 Network Address | 10.0.0.0/24 |
-| 🐧 Kali IP Address | 10.0.0.2/24 (static) |
-| 🚪 Default Gateway | 10.0.0.254 |
-| 🌍 DNS Server | 8.8.8.8 |
-| 🔌 VMware DHCP | Disabled |
-| 🔮 Planned VM Range | 10.0.0.2 – 10.0.0.99 |
+| 🖥️ Host OS | Kali Linux |
+| 🎯 Target Application | OWASP Juice Shop |
+| 🐳 Deployment | Docker container (`bkimminich/juice-shop`) |
+| 🌐 Target URL | `http://localhost:3000` |
+| 🔍 Recon Tools | nmap, nikto, curl |
+| 🕵️ Proxy Tool | Burp Suite Community Edition |
+| 🌍 Browser | Firefox |
 
 ---
 
-# 🪜 Lab Setup Procedure
+# 🪜 Review Procedure
 
-## Step 1. Install 7-Zip
+## Step 1. Deploy the target application
 
-7-Zip was installed to extract the Kali Linux VM image, which is downloaded as a compressed archive.
-
-## Step 2. Install VMware Workstation
-
-VMware Workstation 17 Pro was installed on Windows 11 as the hypervisor.
-
-## Step 3. Configure the 10.0.0.0/24 network
-
-In **Edit > Virtual Network Editor > Change Settings**, the **VMnet8 (NAT)** network was configured:
-
-- Subnet IP: `10.0.0.0`
-- Subnet mask: `255.255.255.0`
-- Local DHCP service: **disabled**, so VMware does not hand out addresses
-- NAT gateway: changed from `10.0.0.2` to `10.0.0.254`
-
-The gateway was moved because VMware uses `x.x.x.2` as the gateway by default, which would clash with the required Kali IP `10.0.0.2`.
-
-![Virtual Network Editor and NAT settings](screenshots/02-vmnet8-network-editor.png)
-
-![NAT settings with gateway 10.0.0.254](screenshots/03-vmnet8-nat-settings.png)
-
-## Step 4. Import Kali Linux
-
-The Kali Linux VMware image was downloaded from the official Kali website, extracted with 7-Zip, and opened in VMware. The VM network adapter is set to **NAT**, which connects it to VMnet8.
-
-## Step 5. Configure the static IP in Kali Linux
+Juice Shop was run as a Docker container, bound only to localhost:
 
 ```bash
-sudo nmcli connection modify "Wired connection 1" ipv4.method manual ipv4.addresses 10.0.0.2/24 ipv4.gateway 10.0.0.254 ipv4.dns 8.8.8.8
-sudo nmcli connection down "Wired connection 1"
-sudo nmcli connection up "Wired connection 1"
+sudo docker run -d -p 3000:3000 --name juice-shop bkimminich/juice-shop
+curl -I http://127.0.0.1:3000
 ```
 
-> **Important:** The connection name may be different on other systems. Run `nmcli connection show` first to find yours.
+## Step 2. Reconnaissance — port and service scan
 
-![IP address, route and ping test](screenshots/05-final-ip-route-ping.png)
+```bash
+nmap -sV -p 3000 127.0.0.1
+```
 
-## Step 6. Enable clipboard and drag-and-drop
+![nmap port scan result](screenshots/01-nmap-port-scan.png)
 
-In **VM > Settings > Options > Guest Isolation**, both **Enable drag and drop** and **Enable copy and paste** were turned on.
+## Step 3. Reconnaissance — HTTP response headers
 
-![Guest isolation settings](screenshots/06-guest-isolation.png)
+```bash
+curl -I http://localhost:3000
+```
 
-## Step 7. Share the Downloads folder
+![HTTP response headers](screenshots/02-http-response-headers.png)
 
-In **VM > Settings > Options > Shared Folders**, sharing was set to **Always enabled** and the host **Downloads** folder was added. Inside Kali, the shared folder appears under `/mnt/hgfs/`.
+## Step 4. Reconnaissance — automated misconfiguration scan
 
-![Shared folder visible in Kali](screenshots/07-shared-folder.png)
+```bash
+nikto -h http://localhost:3000
+```
 
-## Step 8. Take a clean snapshot
+![nikto scan results](screenshots/03-nikto-scan-results.png)
 
-After everything was working, a snapshot was taken with **VM > Snapshot > Take Snapshot**. It is a clean baseline that I can restore if a future exercise breaks the VM.
+> Nikto also reported ~150 "potentially interesting backup/cert file" hits (e.g. `/backup.tar`, `/database.jks`). These were manually verified and triaged as **false positives**, since the target is a single-page app that returns `HTTP 200` for almost any path. Only the genuine, manually confirmed findings below were kept.
 
-![Snapshot Manager](screenshots/08-snapshot.png)
+## Step 5. Intercept traffic with Burp Suite
+
+Burp Suite Community Edition was configured as the browser's proxy to capture and inspect live requests before manual exploitation began.
+
+![Burp Suite capturing the login request](screenshots/04-burp-proxy-sqli-capture.png)
+
+## Step 6. Manually test and validate each finding
+
+Each finding below was reproduced manually and confirmed with evidence (Steps detailed in the **Findings** section).
 
 ---
 
-# 🔎 Lab Verification
+# 🔎 Findings Summary
 
-| ✅ Test | 🧾 Command / Action | 🎯 Result |
-|---|---|---|
-| 🌐 IP address | `ip a` | `10.0.0.2/24`, static (no "dynamic" flag) |
-| 🚪 Routing | `ip route` | Default route via `10.0.0.254` |
-| 🌍 Internet and DNS | `ping -c 3 google.com` | 3 of 3 replies, 0% packet loss |
-| 📁 Shared folder | `ls /mnt/hgfs/` | Downloads folder is listed |
-| 📋 Clipboard | Copy on Windows, paste in Kali | Text pasted correctly |
-| 💾 Snapshot | VM > Snapshot > Snapshot Manager | Snapshot is listed |
+| # | Finding | OWASP Category | Severity |
+|---|---------|-----------------|----------|
+| 1 | SQL Injection — Authentication Bypass | A03:2021 – Injection | **Critical** |
+| 2 | Reflected Cross-Site Scripting (XSS) | A03:2021 – Injection | **Medium** |
+| 3 | Broken Access Control — Sensitive File Exposure | A01:2021 – Broken Access Control | **High** |
+| 4 | Security Misconfiguration | A05:2021 – Security Misconfiguration | **Medium** |
 
-### Example Results
+---
 
-```
-Kali IP address : 10.0.0.2/24 (static)
-Default gateway : 10.0.0.254
-Ping test       : 3 packets transmitted, 3 received, 0% packet loss
-```
+## Finding 1: SQL Injection — Authentication Bypass
+
+**Location:** `POST /rest/user/login` (login form, email field)
+
+**Description:** The login form does not sanitize user input before using it in a backend database query. Submitting a SQL injection payload in the email field bypasses authentication entirely and logs the attacker in as the administrator, with no valid credentials.
+
+**Steps to Reproduce:**
+1. On the login page, enter `' or 1=1--` in the **Email** field.
+2. Enter any value in **Password**.
+3. Click **Log in**.
+
+**Evidence:**
+
+![SQLi payload in login form](screenshots/05-sqli-login-payload.png)
+![Admin login confirmed](screenshots/06-sqli-admin-login-confirmed.png)
+
+The Burp Suite capture in Step 5 above shows the raw `POST /rest/user/login` request and response, including a valid session token issued for `admin@juice-sh.op`.
+
+**Severity:** Critical — complete authentication bypass with no valid credentials, granting full administrative access.
+
+**Remediation:**
+- Use parameterized queries / prepared statements.
+- Apply strict server-side input validation on authentication fields.
+- Use an ORM with built-in query parameterization.
+
+---
+
+## Finding 2: Reflected Cross-Site Scripting (XSS)
+
+**Location:** `GET /#/search?q=` (search bar)
+
+**Description:** User input in the search feature is reflected back into the page without output encoding, allowing arbitrary HTML/JavaScript execution.
+
+**Steps to Reproduce:**
+1. In the search bar, enter: `<iframe src="javascript:alert('xss')">`
+2. Press Enter.
+
+**Evidence:**
+
+![Reflected XSS alert](screenshots/07-xss-reflected-alert.png)
+
+**Severity:** Medium — could enable session hijacking or phishing if combined with a social-engineering vector.
+
+**Remediation:**
+- Encode all user-supplied output before rendering into HTML context.
+- Implement a strict Content Security Policy (CSP).
+- Avoid unsafe DOM sinks (e.g. `innerHTML`) for user input.
+
+---
+
+## Finding 3: Broken Access Control — Sensitive File Exposure
+
+**Location:** `GET /ftp/`
+
+**Description:** The `/ftp/` directory is publicly reachable with no authentication and exposes a directory listing of internal files, including what appears to be a password database and confidential business documents.
+
+**Steps to Reproduce:**
+1. Note the `/ftp/` entry disclosed in `robots.txt`.
+2. Navigate to `http://localhost:3000/ftp`.
+
+**Evidence:**
+
+![FTP directory listing exposed](screenshots/08-ftp-sensitive-files-exposed.png)
+
+Files visible without authentication include `incident-support.kdbx`, `acquisitions.md`, `legal.md`, `announcement_encrypted.md`, and several `.bak` backup files.
+
+**Severity:** High — unauthenticated disclosure of apparently confidential business and credential-related files.
+
+**Remediation:**
+- Disable directory listing on the web server.
+- Move non-public files outside the web root or restrict with proper authentication.
+- Audit all publicly reachable paths for sensitive content before deployment.
+
+---
+
+## Finding 4: Security Misconfiguration
+
+**Location:** HTTP response headers; server fingerprint
+
+**Description:** Reconnaissance surfaced several configuration weaknesses:
+- `Access-Control-Allow-Origin: *` — an overly permissive CORS policy.
+- `X-Recruiting: /#/jobs` — a non-standard header disclosing an internal path.
+- `robots.txt` discloses the sensitive `/ftp/` path rather than the path being restricted server-side.
+
+**Evidence:** See Steps 2–4 above (`screenshots/01-nmap-port-scan.png`, `screenshots/02-http-response-headers.png`, `screenshots/03-nikto-scan-results.png`).
+
+**Severity:** Medium — individually low-impact, but weakens the application's overall security posture.
+
+**Remediation:**
+- Restrict `Access-Control-Allow-Origin` to a known allow-list.
+- Remove non-standard headers that disclose internal details.
+- Don't rely on `robots.txt` as a substitute for real access control.
 
 ---
 
 # 🐞 Problems Encountered & Solutions
 
-## Problem 1. Kali received a dynamic IP address instead of 10.0.0.2
+## Problem 1. Docker port 3000 already allocated
 
-After the first boot, Kali showed `10.0.0.128/24` marked as **dynamic**, and the default route pointed to `10.0.0.2`. Even after changing the VMware settings, the old address stayed.
+When starting the Juice Shop container, `docker run` failed with `Bind for 0.0.0.0:3000 failed: port is already allocated`.
 
-![Before: dynamic IP address from DHCP](screenshots/04-before-dhcp-ip.png)
-
-**Cause:**
-
-- VMware's DHCP service was giving Kali an address from its default range.
-- VMware's NAT gateway was using `10.0.0.2`, the exact address required for Kali. Two devices cannot share one IP.
-- Kali was still holding its old DHCP lease.
+**Cause:** A Juice Shop container from an earlier session was already running on port 3000, and two more `docker run` attempts had been left in a `Created` (not running) state.
 
 **Solution:**
+1. Ran `docker ps -a` to see all containers and `ss -tulpn | grep 3000` to confirm what held the port.
+2. Found the original container (`juice-shop`) was already up and serving correctly.
+3. Removed the two failed, non-running containers with `docker rm -f`.
+4. Verified the app with `curl -I http://127.0.0.1:3000`.
 
-1. Moved the VMware NAT gateway to `10.0.0.254`.
-2. Disabled the VMware DHCP service on VMnet8.
-3. Set the IP address manually in Kali with `nmcli` (Step 5).
-4. Verified with `ip a`, `ip route`, and `ping`.
-
-**Result:** Kali now uses the static IP `10.0.0.2/24` and has full internet access.
+**Result:** A single, known-good Juice Shop container served the entire review with no port conflicts.
 
 ---
 
 # 💡 What I Learned
 
-### 1. NAT networking in VMware
-I learned how VMnet8, the NAT gateway, and the DHCP service work together, and how to customize them for a lab subnet.
+### 1. The full assessment workflow
+I practiced the complete defensive review cycle: recon → proxy setup → manual validation → evidence capture → severity rating → remediation.
 
-### 2. IP address planning
-Two devices cannot use the same IP address. Checking the default gateway before choosing a static IP avoids conflicts.
+### 2. Triage over blind trust in scanners
+Automated tools like Nikto produce false positives on single-page apps. Manually confirming each finding before reporting it is essential to a credible review.
 
-### 3. Static IP configuration in Linux
-I learned to set and verify an IP address, gateway, and DNS server using `nmcli`, `ip a`, `ip route`, and `ping`.
+### 3. How common OWASP Top 10 flaws actually work
+Reproducing SQL injection, XSS, and broken access control hands-on made the underlying mechanics far clearer than reading about them.
 
-### 4. Snapshots
-A clean snapshot gives me a safe recovery point before I experiment with security tools.
+### 4. Using Burp Suite as an interception proxy
+I learned to capture, inspect, and read raw HTTP requests/responses to confirm exploitation rather than relying on the UI alone.
 
-### 5. Documentation
-Writing down commands, screenshots, problems, and fixes is an important part of professional cybersecurity work.
+### 5. Documentation as part of the job
+Recording scope, steps, evidence, and remediation in a structured report is as much a part of security work as finding the bugs.
 
 ---
 
 # 🔐 Security & Ethical Use
 
-This lab is for **education and learning only**. All work was done inside my own virtual environment on a device I own. I will only test systems that I own or have written permission to test.
+This review was performed for **education and internship assessment purposes only**, entirely inside a local, isolated environment on a device I own. I only tested a training application I deployed myself, and no third-party or production systems were accessed at any point.
 
 ---
 
 # 🔗 Tools & Resources
 
-- **7-Zip:** https://7-zip.org/download.html
-- **Kali Linux:** https://kali.org/get-kali
-- **VMware Workstation:** downloaded from the official VMware website
+- **OWASP Juice Shop:** https://owasp.org/www-project-juice-shop/
+- **Burp Suite Community Edition:** https://portswigger.net/burp/communitydownload
+- **nmap:** https://nmap.org/
+- **Nikto:** https://cirt.net/Nikto2
+- **OWASP Top 10:** https://owasp.org/www-project-top-ten/
 
 ---
 
 # 👤 Author
 
-**Mubassir**
-Cybersecurity Intern, Networkwalks (Batch B084)
-Instructor: Waqas Karim CCIE
+**[Your Name]**
+Cybersecurity Intern, SWYNEX Technologies
 
 ---
 
 ## 📌 Project Information
 
-**Program Name:** Cybersecurity at Networkwalks | **Week:** 01 | **Project:** Cybersecurity & Pentesting Lab Setup | **Repository:** GitHub
+**Program Name:** Cybersecurity Internship at SWYNEX Technologies | **Task:** Task 3 | **Project:** Web Security Review | **Repository:** GitHub
